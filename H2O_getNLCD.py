@@ -1,7 +1,7 @@
 import os
-import arcpy
 import requests
-
+import geopandas
+import arcpy
 
 def arc_getBoundingBox(fc):
     """Returns dataset extent envelope"""
