@@ -14,7 +14,7 @@ def arc_getBoundingBox(fc):
     return [xmin, ymin, xmax, ymax]
 
 
-def getNLCD(poly, directory, dataset ="Land_Cover", year = "2011")
+def getNLCD(poly, directory, dataset ="Land_Cover", year = "2011"):
     """Download NLCD raster tiles by polygon extent
     Currently only works for lower 48
     """
