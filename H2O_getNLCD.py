@@ -1,7 +1,7 @@
 import os
 import requests
 import geopandas
-import arcpy
+#import arcpy
 
 def arc_getBoundingBox(fc):
     """Returns dataset extent envelope"""
@@ -14,9 +14,41 @@ def arc_getBoundingBox(fc):
     return [xmin, ymin, xmax, ymax]
 
 
+def gpd_getBoundingBox(fc):
+    """Use geopandas library instead of arcpy
+    param@fc should be a shapefile
+    """
+    shp = geopandas.read_file(fc)
+    xmin = shp.bounds['minx'][0]
+    xmax = shp.bounds['maxx'][0]
+    ymin = shp.bounds['miny'][0]
+    ymax = shp.bounds['maxy'][0]
+
+    return [xmin, ymin, xmax, ymax]
+
+
+def gpd_prj(fc):
+    """Return EPSG for shapefile"""
+    shp = geopandas.read_file(fc)
+    return shp.crs['init'][5:]
+
+
+def py_transform_pnt(pnt, inEPSG, outEPSG):
+    """Use pyproj instead of arcpy (pyproj is geopandas dependency)
+    from pyproj import Proj, transform
+    pnt is expected as x,y tuple
+    """
+    x1, y1 = pnt[0], pnt[1] #added benefit of checking pnt format
+    inProj = pyproj.Proj(init='epsg:{}'.format(inEPSG))
+    outProj = pyproj.Proj(init='epsg:{}'.format(outEPSG))
+
+    return pyproj.transform(inProj, outProj, x1, y1)
+
+
 def getNLCD(poly, directory, dataset ="Land_Cover", year = "2011"):
     """Download NLCD raster tiles by polygon extent
     Currently only works for lower 48
+    Currently requires poly be in EPSG 3857
     """
     pathD1 = os.path.join(directory, "D1")
 
@@ -26,9 +58,12 @@ def getNLCD(poly, directory, dataset ="Land_Cover", year = "2011"):
         message("Error: specified NLCD dataset not available")
 
     # Get bounding box
-    bBox = arc_getBoundingBox(AOI) #expects ESPG 3857
+    bBox = gpd_getBoundingBox(poly)
+    # Transform bounding box to EPSG 3857
+    inSR = gpd_prj(poly) # Determine current EPSG
+    bBox = (bBox, inSR, 3857)
     
-    # Determin landmass 
+    # Determine landmass (will use bBox to set landmass in the future)
     landmass = "L48"
     coverage = "NLCD_{}_{}_{}".format(year, dataset, landmass)
 
