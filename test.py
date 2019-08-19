@@ -16,4 +16,4 @@ gpd_df = geopandas.read_file(shp)
 year = "2016"
 dataset = "Land_Cover"
 
-getNLCD(gpd_df, filepath, dataset, year)
+H2O_getNLCD.getNLCD(gpd_df, filepath, dataset, year)
