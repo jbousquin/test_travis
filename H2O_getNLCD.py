@@ -14,11 +14,11 @@ def arc_getBoundingBox(fc):
     return [xmin, ymin, xmax, ymax]
 
 
-def gpd_getBoundingBox(fc):
+def gpd_getBoundingBox(shp):
     """Use geopandas library instead of arcpy
     param@fc should be a shapefile
     """
-    shp = geopandas.read_file(fc)
+    #shp = geopandas.read_file(fc)
     xmin = shp.bounds['minx'][0]
     xmax = shp.bounds['maxx'][0]
     ymin = shp.bounds['miny'][0]
@@ -27,9 +27,9 @@ def gpd_getBoundingBox(fc):
     return [xmin, ymin, xmax, ymax]
 
 
-def gpd_prj(fc):
+def gpd_prj(shp):
     """Return EPSG for shapefile"""
-    shp = geopandas.read_file(fc)
+    #shp = geopandas.read_file(fc)
     return shp.crs['init'][5:]
 
 
