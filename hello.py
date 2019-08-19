@@ -1,3 +1,6 @@
 import os
 
-print("Hello world")
+def message(str):
+    print(str)
+
+message("Hello world")
