@@ -1,4 +1,4 @@
-from H2O_getNLCd import getNLCD
+from H2O_getNLCD import getNLCD
 
 # Purpose: script to get NLCD rasters for bounding box
 AOI = r"C:\ArcGIS\Local_GIS\H2O\AOI\Monroe_Parish_3857.shp"
