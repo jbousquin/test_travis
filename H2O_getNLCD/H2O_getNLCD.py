@@ -72,7 +72,7 @@ def getNLCD(poly, directory, dataset ="Land_Cover", year = "2011"):
     # Source url
     url = "https://www.mrlc.gov/geoserver/mrlc_display/{}/ows".format(coverage)
     # Check url status
-    if requests.get(source).status_code != 200:
+    if requests.get(url).status_code != 200:
         message("warning!")
     
     # Create subset X and Y string from extent
@@ -87,7 +87,7 @@ def getNLCD(poly, directory, dataset ="Land_Cover", year = "2011"):
             "subset": subset
             }
     # Get response
-    res = requests.get(source, data)
+    res = requests.get(url, data)
 
     # Write response to D1 (already unpacked)
     out_file = pathDA + os.sep + "NLCD_{}_{}.tif".format(year, dataset)
