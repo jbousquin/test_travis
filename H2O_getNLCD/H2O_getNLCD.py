@@ -16,6 +16,15 @@ def arc_getBoundingBox(fc):
     return [xmin, ymin, xmax, ymax]
 
 
+def gpd_transform_bBox(bBox, inEPSG, outEPSG):
+    pnt1 = (bBox[0], bBox[2])
+    pnt1_out = arc_transform_pnt(pnt1, inEPSG, outEPSG)
+    pnt2 = (bBox[1], bBox[3])
+    pnt2_out = arc_transform_pnt(pnt2, inEPSG, outEPSG)
+
+    return [pnt1_out[0], pnt2_out[0], pnt1_out[1], pnt2_out[1]]
+
+
 def gpd_getBoundingBox(shp):
     """Use geopandas library instead of arcpy
     param@fc should be a shapefile
