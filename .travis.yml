@@ -11,4 +11,4 @@ install:
 
 script: 
 
-  - python test/test.py
+  - python test.py
