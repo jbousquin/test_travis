@@ -16,7 +16,7 @@ import geopandas
 ##    return [xmin, ymin, xmax, ymax]
 
 
-def gpd_transform_bBox(bBox, inEPSG, outEPSG):
+def py_transform_bBox(bBox, inEPSG, outEPSG):
     pnt1 = (bBox[0], bBox[2])
     pnt1_out = arc_transform_pnt(pnt1, inEPSG, outEPSG)
     pnt2 = (bBox[1], bBox[3])
@@ -25,7 +25,7 @@ def gpd_transform_bBox(bBox, inEPSG, outEPSG):
     return [pnt1_out[0], pnt2_out[0], pnt1_out[1], pnt2_out[1]]
 
 
-def gpd_getBoundingBox(shp):
+def py_getBoundingBox(shp):
     """Use geopandas library instead of arcpy
     param@fc should be a shapefile
     """
@@ -38,7 +38,7 @@ def gpd_getBoundingBox(shp):
     return [xmin, ymin, xmax, ymax]
 
 
-def gpd_prj(shp):
+def py_prj(shp):
     """Return EPSG for shapefile"""
     #shp = geopandas.read_file(fc)
     return shp.crs['init'][5:]
@@ -69,10 +69,10 @@ def getNLCD(poly, directory, dataset ="Land_Cover", year = "2011"):
         message("Error: specified NLCD dataset not available")
 
     # Get bounding box
-    bBox = gpd_getBoundingBox(poly)
+    bBox = py_getBoundingBox(poly)
     # Transform bounding box to EPSG 3857
-    inSR = gpd_prj(poly) # Determine current EPSG
-    bBox = (bBox, inSR, 3857)
+    inSR = py_prj(poly) # Determine current EPSG
+    bBox = py_transform_bBox(bBox, inSR, 3857)
     
     # Determine landmass (will use bBox to set landmass in the future)
     landmass = "L48"
