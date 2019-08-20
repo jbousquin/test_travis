@@ -3,6 +3,10 @@ import geopandas
 from json import loads
 
 
+def message(string):
+    print(string)
+
+
 def py_prj(shp):
     """Return EPSG for shapefile"""
     #shp = geopandas.read_file(fc)
