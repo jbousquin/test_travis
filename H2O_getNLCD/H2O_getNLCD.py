@@ -52,7 +52,7 @@ def getNLCD(poly, directory = None, dataset = "Land_Cover", year = "2016"):
     """
     # Make sure dataset parameter is usable
     datasets = ["Land_Cover", "Impervious", "Canopy_Cartographic"]
-    assert(dataset in datasets, "The dataset input must match NLCD datasets")
+    assert dataset in datasets, "The dataset input must match NLCD datasets"
 
     # Get bounding box
     bBox = py_getBoundingBox(poly)
