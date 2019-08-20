@@ -21,4 +21,9 @@ years = ["2001", "2006", "2011", "2016",]
 datasets = ["Land_Cover", "Impervious", "Canopy_Cartographic",]
 for year in years:
     for dataset in datasets:
-        H2O_getNLCD.getNLCD(gpd_df, filepath, dataset, year)
+        #Canopy isn't available for every year
+        if dataset != "Canopy_Cartographic":
+            H2O_getNLCD.getNLCD(gpd_df, filepath, dataset, year)
+        else:
+            if year == "2011":
+                H2O_getNLCD.getNLCD(gpd_df, filepath, dataset, year)
