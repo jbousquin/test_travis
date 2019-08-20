@@ -52,12 +52,12 @@ def getNLCD(poly, directory, dataset ="Land_Cover", year = "2011"):
     """
     # Make sure dataset parameter is usable
     datasets = ["Land_Cover", "Canopy", "Impervious"]
-    if dataset not in datasets:
-        message("Error: specified NLCD dataset not available")
+    assert(dataset in datasets, "The dataset input must match NLCD datasets")
 
     # Get bounding box
     bBox = py_getBoundingBox(poly)
     # Transform bounding box to EPSG 3857
+    #asert poly is projected?
     inSR = py_prj(poly) # Determine current EPSG
     bBox = py_transform_bBox(bBox, inSR, 3857)
     
