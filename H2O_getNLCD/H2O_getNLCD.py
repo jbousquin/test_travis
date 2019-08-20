@@ -45,13 +45,13 @@ def py_transform_pnt(pnt, inEPSG, outEPSG):
     return pyproj.transform(inProj, outProj, x1, y1)
 
 
-def getNLCD(poly, directory, dataset ="Land_Cover", year = "2011"):
+def getNLCD(poly, directory = None, dataset = "Land_Cover", year = "2016"):
     """Download NLCD raster tiles by polygon extent
-    Currently only works for lower 48
+    Currently only works for lower 48, add 'AK', 'HI' and 'PR'
     Currently requires poly be in EPSG 3857
     """
     # Make sure dataset parameter is usable
-    datasets = ["Land_Cover", "Canopy", "Impervious"]
+    datasets = ["Land_Cover", "Impervious", "Canopy_Cartographic"]
     assert(dataset in datasets, "The dataset input must match NLCD datasets")
 
     # Get bounding box
@@ -85,7 +85,8 @@ def getNLCD(poly, directory, dataset ="Land_Cover", year = "2011"):
     # Get response
     res = requests.get(url, data)
 
-    # Write response to directory (already unpacked)
-    out_file = directory + os.sep + "NLCD_{}_{}.tif".format(year, dataset)
-    with open(out_file, "wb") as f:
-        f.write(res.content)
+    # Write response to directory if provided
+    if directory != None:    
+        out_file = directory + os.sep + "NLCD_{}_{}.tif".format(year, dataset)
+        with open(out_file, "wb") as f:
+            f.write(res.content)
