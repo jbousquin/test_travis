@@ -100,7 +100,7 @@ def getNLCD(poly, directory, dataset ="Land_Cover", year = "2011"):
     res = requests.get(url, data)
 
     # Write response to D1 (already unpacked)
-    out_file = pathDA + os.sep + "NLCD_{}_{}.tif".format(year, dataset)
+    out_file = pathD1 + os.sep + "NLCD_{}_{}.tif".format(year, dataset)
     with open(out_file, "wb") as f:
         f.write(res.content)
 
