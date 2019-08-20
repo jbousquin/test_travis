@@ -1,20 +1,8 @@
 #!/usr/bin/env python
-
 import os
 import requests
 import geopandas
 import pyproj
-#import arcpy
-##
-##def arc_getBoundingBox(fc):
-##    """Returns dataset extent envelope"""
-##    desc = arcpy.Describe(fc)
-##    xmin = desc.extent.XMin
-##    xmax = desc.extent.XMax
-##    ymin = desc.extent.YMin
-##    ymax = desc.extent.YMax
-##
-##    return [xmin, ymin, xmax, ymax]
 
 
 def py_transform_bBox(bBox, inEPSG, outEPSG):
@@ -62,8 +50,6 @@ def getNLCD(poly, directory, dataset ="Land_Cover", year = "2011"):
     Currently only works for lower 48
     Currently requires poly be in EPSG 3857
     """
-    #pathD1 = os.path.join(directory, "D1")
-
     # Make sure dataset parameter is usable
     datasets = ["Land_Cover", "Canopy", "Impervious"]
     if dataset not in datasets:
@@ -103,12 +89,3 @@ def getNLCD(poly, directory, dataset ="Land_Cover", year = "2011"):
     out_file = directory + os.sep + "NLCD_{}_{}.tif".format(year, dataset)
     with open(out_file, "wb") as f:
         f.write(res.content)
-
-
-### Purpose: script to get NLCD rasters for bounding box
-##AOI = r"C:\ArcGIS\Local_GIS\H2O\AOI\Monroe_Parish_3857.shp"
-##directory = os.path.dir(AOI)
-##year = "2016"
-##dataset = "Land_Cover"
-##
-##getNLCD(AOI, directory, dataset, year)
