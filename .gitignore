@@ -5,3 +5,6 @@
 .RData
 .Ruserdata
 .Rproj.user
+
+#py compile files
+*.pyc
