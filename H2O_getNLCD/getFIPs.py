@@ -1,4 +1,3 @@
-import pyproj
 import geopandas
 import requests
 from json import loads
@@ -46,6 +45,10 @@ def mapServerRequest(catalog, service, layer, query, server = "arcgis",
                                                       service, typ)
     if layer is not None:
         url += "{}/".format(layer)
+
+    # add query to url
+    url += 'query'
+    
     # Return json
     query['f'] = 'json'
     if token:
@@ -55,9 +58,9 @@ def mapServerRequest(catalog, service, layer, query, server = "arcgis",
         res = requests.get(url, query)
         assert res.ok
         return loads(res.content)
-    except Exception as exc:
+    except Exception:
         message("Could not get a response using: " +
-                "{}query?{}".format(url, "&".join('{}={}'.format(k, v) for k, v in query.items())))
+                "?{}".format(url, "&".join('{}={}'.format(k, v) for k, v in query.items())))
         raise
 
 
