@@ -62,7 +62,7 @@ def getNLCD(poly, directory, dataset ="Land_Cover", year = "2011"):
     Currently only works for lower 48
     Currently requires poly be in EPSG 3857
     """
-    pathD1 = os.path.join(directory, "D1")
+    #pathD1 = os.path.join(directory, "D1")
 
     # Make sure dataset parameter is usable
     datasets = ["Land_Cover", "Canopy", "Impervious"]
@@ -99,8 +99,8 @@ def getNLCD(poly, directory, dataset ="Land_Cover", year = "2011"):
     # Get response
     res = requests.get(url, data)
 
-    # Write response to D1 (already unpacked)
-    out_file = pathD1 + os.sep + "NLCD_{}_{}.tif".format(year, dataset)
+    # Write response to directory (already unpacked)
+    out_file = directory + os.sep + "NLCD_{}_{}.tif".format(year, dataset)
     with open(out_file, "wb") as f:
         f.write(res.content)
 
