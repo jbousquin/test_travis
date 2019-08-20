@@ -63,7 +63,7 @@ def polyFIPS(poly):
     catalog = "tigerweb.geo.census.gov"
     service = "TIGERweb/tigerWMS_Current"
     layer = 86 #Counties ID: 86
-    resultJSON = MapServerRequest(catalog, service, layer, query)
+    resultJSON = mapServerRequest(catalog, service, layer, query)
     #counties = [c['attributes'][fields[0]] for c in resultJSON['features']]
     FIPS = [c['attributes'][fields[1]] for c in resultJSON['features']]
 
