@@ -37,9 +37,10 @@ def geoQuery(geo, inSR, fields, geoType = "esriGeometryEnvelope"):
 def mapServerRequest(catalog, service, layer, query, server = "arcgis",
                      typ = "MapServer", token = ""):
     """send query to map server using requests"""
-    url = "https://{}/{}/rest/services/{}/{}/".format(catalog, server, service, typ)
+    url = "https://{}/{}/rest/services/{}/{}/".format(catalog, server,
+                                                      service, typ)
     if layer is not None:
-        req += "{}/".format(layer)
+        url += "{}/".format(layer)
     # Return json
     query['f'] = 'json'
     if token:
