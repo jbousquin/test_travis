@@ -13,7 +13,11 @@ shp = os.path.join(filepath, "tests/example_shp/example_AOI.shp")
 # Read example shapefile to geopandas dataframe
 gpd_df = geopandas.read_file(shp)
 
-year = "2016"
-dataset = "Land_Cover"
+# Test defaults
+H2O_getNLCD.getNLCD(gpd_df, filepath)
 
-H2O_getNLCD.getNLCD(gpd_df, filepath, dataset, year)
+# Test multiple years
+years = ["2001", "2006", "2011", "2016",]
+dataset = "Land_Cover"
+for year in years:
+    H2O_getNLCD.getNLCD(gpd_df, filepath, dataset, year)
