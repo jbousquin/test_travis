@@ -56,7 +56,7 @@ def mapServerRequest(catalog, service, layer, query, server = "arcgis",
 
 def polyFIPS(poly):
     """Returns county FIPs intersecting polygon extent"""
-    envelope = ','.join(py_getBoundingBox(poly)) # Get extent
+    envelope = ','.join(map(str, py_getBoundingBox(poly))) # Get extent as str
     inSR = py_prj(poly) # Get spatial reference
     fields = ["NAME", "GEOID"]
     query = geoQuery(envelope, inSR, fields)
