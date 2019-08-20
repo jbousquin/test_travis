@@ -4,16 +4,16 @@ import os
 import requests
 import geopandas
 #import arcpy
-
-def arc_getBoundingBox(fc):
-    """Returns dataset extent envelope"""
-    desc = arcpy.Describe(fc)
-    xmin = desc.extent.XMin
-    xmax = desc.extent.XMax
-    ymin = desc.extent.YMin
-    ymax = desc.extent.YMax
-
-    return [xmin, ymin, xmax, ymax]
+##
+##def arc_getBoundingBox(fc):
+##    """Returns dataset extent envelope"""
+##    desc = arcpy.Describe(fc)
+##    xmin = desc.extent.XMin
+##    xmax = desc.extent.XMax
+##    ymin = desc.extent.YMin
+##    ymax = desc.extent.YMax
+##
+##    return [xmin, ymin, xmax, ymax]
 
 
 def gpd_transform_bBox(bBox, inEPSG, outEPSG):
