@@ -1,8 +1,15 @@
 #!/usr/bin/env python
-import os
 import requests
 import geopandas
 import pyproj
+from os.path import join
+
+
+def checkYear(year):
+    """Run checks and formatting on year"""
+    year = str(year) # coerce to string in case float() or int()
+    assert year.isdigit(), "The year parameter must be numeric"
+    return year
 
 
 def py_transform_bBox(bBox, inEPSG, outEPSG):
@@ -53,7 +60,11 @@ def getNLCD(poly, directory = None, dataset = "Land_Cover", year = "2016"):
     # Make sure dataset parameter is usable
     datasets = ["Land_Cover", "Impervious", "Canopy_Cartographic"]
     assert dataset in datasets, "The dataset input must match NLCD datasets"
-
+    # Make sure year parameter is usable
+    year = checkYear(year)
+    years = ["2001", "2004", "2006", "2008", "2011", "2013", "2016"]
+    assert year in years, "The year {} is not available".format(year)
+    
     # Get bounding box
     bBox = py_getBoundingBox(poly)
     # Transform bounding box to EPSG 3857
@@ -87,6 +98,6 @@ def getNLCD(poly, directory = None, dataset = "Land_Cover", year = "2016"):
 
     # Write response to directory if provided
     if directory != None:    
-        out_file = directory + os.sep + "NLCD_{}_{}.tif".format(year, dataset)
+        out_file = join(directory, "NLCD_{}_{}.tif".format(year, dataset))
         with open(out_file, "wb") as f:
             f.write(res.content)
