@@ -16,9 +16,9 @@ gpd_df = geopandas.read_file(shp)
 # Test defaults
 H2O_getNLCD.getNLCD(gpd_df)
 
-# Test multiple years
+# Test multiple years/datasets
 years = ["2001", "2006", "2011", "2016",]
 datasets = ["Land_Cover", "Impervious", "Canopy_Cartographic",]
 for year in years:
     for dataset in datasets:
-    H2O_getNLCD.getNLCD(gpd_df, filepath, dataset, year)
+        H2O_getNLCD.getNLCD(gpd_df, filepath, dataset, year)
