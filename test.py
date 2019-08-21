@@ -3,6 +3,7 @@ import os
 import geopandas
 from H2O_getNLCD import H2O_getNLCD
 from H2O_getNLCD import getFIPs
+from H2O_getNLCD import getRoads
 
 # Purpose: Test script to get NLCD rasters for bounding box
 
@@ -32,3 +33,6 @@ for year in years:
 
 #Move this section to getFIPS test
 list_FIPs = getFIPs.polyFIPS(gpd_df)
+
+for FIP in list_FIPs:
+  roads(FIP, directory = filepath)
