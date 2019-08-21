@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+"""getFIPs function to return county FIPs for a given goepandas dataframe
+envelope. Can also easily be used to return county name.
+"""
 import geopandas
 import requests
 from json import loads
