@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import requests
 from os.path import join
-from H2O_getNLCD.utils import py as utils
+from H2O.utils import py as utils
 
 
 def checkYear(year, years = None):
