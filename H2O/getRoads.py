@@ -8,10 +8,12 @@ def message(string):
     print(string)
 
 
-def checkYear(year):
+def checkYear(year, years = None):
     """Run checks and formatting on year"""
     year = str(year) # coerce to string in case float() or int()
     assert year.isdigit(), "The year parameter must be numeric"
+    if years:
+        assert year in years, "The year {} is not available".format(year)
     return year
 
 
@@ -35,12 +37,12 @@ def getArchive(response):
 def getRoads(FIP, directory = None, year = "2019"):
     """Download shapefile road lines by county
     """
-    # Make sure year is usable
-    year = checkYear(year)
+    # Make sure year is usable   
     if int(year) <= 2008:
         years = ["1992", "1999", "2002", "2003",]
-        assert year in years, "The year {} is not available".format(year)
+        year = checkYear(year, years)
     else:
+        year = checkYear(year)
         assert int(year) < 2020, "Only available through 2019"
 
     # Make sure FIP is expected length
