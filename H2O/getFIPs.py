@@ -5,29 +5,11 @@ envelope. Can also easily be used to return county name.
 import geopandas
 import requests
 from json import loads
+from H2O.utils import py as utils
 
 
 def message(string):
     print(string)
-
-
-def py_prj(shp):
-    """Return EPSG for shapefile"""
-    #shp = geopandas.read_file(fc)
-    return shp.crs['init'][5:]
-
-
-def py_getBoundingBox(shp):
-    """Use geopandas library instead of arcpy
-    param@shp should be a geopandas dataframe object
-    """
-    #shp = geopandas.read_file(fc)
-    xmin = shp.bounds['minx'][0]
-    xmax = shp.bounds['maxx'][0]
-    ymin = shp.bounds['miny'][0]
-    ymax = shp.bounds['maxy'][0]
-
-    return [xmin, ymin, xmax, ymax]
 
 
 def geoQuery(geo, inSR, fields, geoType = "esriGeometryEnvelope"):
@@ -70,8 +52,8 @@ def mapServerRequest(catalog, service, layer, query, server = "arcgis",
 
 def polyFIPS(poly):
     """Returns county FIPs intersecting polygon extent"""
-    envelope = ','.join(map(str, py_getBoundingBox(poly))) # Get extent as str
-    inSR = py_prj(poly) # Get spatial reference
+    envelope = ','.join(map(str, utils.getBoundingBox(poly))) # Get extent as str
+    inSR = utils.getCRS(poly) # Get spatial reference
     fields = ["NAME", "GEOID"]
     query = geoQuery(envelope, inSR, fields)
     catalog = "tigerweb.geo.census.gov"
