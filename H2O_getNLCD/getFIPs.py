@@ -61,7 +61,7 @@ def mapServerRequest(catalog, service, layer, query, server = "arcgis",
     try:
         res = requests.get(url, query)
         assert res.ok
-        return loads(res.content)
+        return loads(res.content.decode('utf-8'))
     except Exception:
         message("Could not get a response using: " +
                 "?{}".format(url, "&".join('{}={}'.format(k, v) for k, v in query.items())))
