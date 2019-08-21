@@ -27,7 +27,7 @@ def getArchive(response):
                 return geopandas.read_file(f)
 
 
-def roads(FIP, directory = None, year = "2019"):
+def getRoads(FIP, directory = None, year = "2019"):
     """Download shapefile road lines by county
     """
     # Make sure year is usable
