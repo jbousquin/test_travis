@@ -1,7 +1,7 @@
 import requests
 import geopandas
 from os.path import join
-from zipfile import ZipFile
+from zipfile import ZipFile, is_zipfile
 
 
 def message(string):
@@ -13,6 +13,11 @@ def checkYear(year):
     year = str(year) # coerce to string in case float() or int()
     assert year.isdigit(), "The year parameter must be numeric"
     return year
+
+
+def checkArchive(archive):
+    """Quickly return True if valid zip file"""
+    return is_zipfile(archive)
 
 
 def getArchive(response):
