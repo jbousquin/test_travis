@@ -1,55 +1,16 @@
 #!/usr/bin/env python
 import requests
-import geopandas
-import pyproj
 from os.path import join
+from H2O_getNLCD.utils import py as utils
 
 
-def checkYear(year):
+def checkYear(year, years = None):
     """Run checks and formatting on year"""
     year = str(year) # coerce to string in case float() or int()
     assert year.isdigit(), "The year parameter must be numeric"
+    if years:
+        assert year in years, "The year {} is not available".format(year)
     return year
-
-
-def py_transform_bBox(bBox, inEPSG, outEPSG):
-    pnt1 = (bBox[0], bBox[2])
-    pnt1_out = py_transform_pnt(pnt1, inEPSG, outEPSG)
-    pnt2 = (bBox[1], bBox[3])
-    pnt2_out = py_transform_pnt(pnt2, inEPSG, outEPSG)
-
-    return [pnt1_out[0], pnt2_out[0], pnt1_out[1], pnt2_out[1]]
-
-
-def py_getBoundingBox(shp):
-    """Use geopandas library instead of arcpy
-    param@fc should be a shapefile
-    """
-    #shp = geopandas.read_file(fc)
-    xmin = shp.bounds['minx'][0]
-    xmax = shp.bounds['maxx'][0]
-    ymin = shp.bounds['miny'][0]
-    ymax = shp.bounds['maxy'][0]
-
-    return [xmin, ymin, xmax, ymax]
-
-
-def py_prj(shp):
-    """Return EPSG for shapefile"""
-    #shp = geopandas.read_file(fc)
-    return shp.crs['init'][5:]
-
-
-def py_transform_pnt(pnt, inEPSG, outEPSG):
-    """Use pyproj instead of arcpy (pyproj is geopandas dependency)
-    from pyproj import Proj, transform
-    pnt is expected as x,y tuple
-    """
-    x1, y1 = pnt[0], pnt[1] #added benefit of checking pnt format
-    inProj = pyproj.Proj(init='epsg:{}'.format(inEPSG))
-    outProj = pyproj.Proj(init='epsg:{}'.format(outEPSG))
-
-    return pyproj.transform(inProj, outProj, x1, y1)
 
 
 def getNLCD(poly, directory = None, dataset = "Land_Cover", year = "2016"):
@@ -62,15 +23,13 @@ def getNLCD(poly, directory = None, dataset = "Land_Cover", year = "2016"):
     assert dataset in datasets, "The dataset input must match NLCD datasets"
     # Make sure year parameter is usable
     year = checkYear(year)
-    years = ["2001", "2004", "2006", "2008", "2011", "2013", "2016"]
-    assert year in years, "The year {} is not available".format(year)
     
     # Get bounding box
-    bBox = py_getBoundingBox(poly)
+    bBox = utils.getBoundingBox(poly)
     # Transform bounding box to EPSG 3857
     #asert poly is projected?
-    inSR = py_prj(poly) # Determine current EPSG
-    bBox = py_transform_bBox(bBox, inSR, 3857)
+    inSR = utils.getCRS(poly) # Determine current EPSG
+    bBox = utils.transform_bBox(bBox, inSR, 3857)
     
     # Determine landmass (will use bBox to set landmass in the future)
     landmass = "L48"
@@ -80,7 +39,7 @@ def getNLCD(poly, directory = None, dataset = "Land_Cover", year = "2016"):
     url = "https://www.mrlc.gov/geoserver/mrlc_display/{}/ows".format(coverage)
     # Check url status
     if requests.get(url).status_code != 200:
-        print("Error: No web coverage service at {}".format(url))
+        message("Error: No web coverage service at {}".format(url))
     
     # Create subset X and Y string from extent
     subset = ["X{},{}".format(bBox[0], bBox[2]),
