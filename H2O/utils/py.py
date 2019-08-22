@@ -41,7 +41,7 @@ def transform_bBox(bBox, inEPSG, outEPSG):
     pnt2 = (bBox[2], bBox[3])
     pnt2_out = transform_pnt(pnt2, inEPSG, outEPSG)
 
-    return [pnt1_out[0], pnt2_out[0], pnt1_out[1], pnt2_out[1]]
+    return [pnt1_out[0], pnt1_out[1], pnt2_out[0], pnt2_out[1]]
 
 
 def message(string):
