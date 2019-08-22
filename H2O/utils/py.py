@@ -44,6 +44,10 @@ def transform_bBox(bBox, inEPSG, outEPSG):
     return [pnt1_out[0], pnt2_out[0], pnt1_out[1], pnt2_out[1]]
 
 
+def message(string):
+    print(string)
+
+
 #def clipRaster(raster, poly):
 #"""Clip raster down to polygon geometry
 #"""
