@@ -36,9 +36,9 @@ def transform_pnt(pnt, inEPSG, outEPSG):
 
 def transform_bBox(bBox, inEPSG, outEPSG):
     """Add function documentation"""
-    pnt1 = (bBox[0], bBox[2])
+    pnt1 = (bBox[0], bBox[1])
     pnt1_out = transform_pnt(pnt1, inEPSG, outEPSG)
-    pnt2 = (bBox[1], bBox[3])
+    pnt2 = (bBox[2], bBox[3])
     pnt2_out = transform_pnt(pnt2, inEPSG, outEPSG)
 
     return [pnt1_out[0], pnt2_out[0], pnt1_out[1], pnt2_out[1]]
