@@ -51,12 +51,12 @@ def getRoads(FIP, directory = None, year = "2019"):
     # Create file name for county
     download = "tl_{}_{}_roads.zip".format(year, FIP)
 
-    # Download zip file (stream = True may work better for larger files)
-    res = requests.get(url + download)
-    assert res.ok, "Problem with response from {}".format(url + download)
-
     # Save zip to directory if specified
     if directory != None:
+        # Download zip file (stream = True may work better for larger files)
+        res = requests.get(url + download)
+        assert res.ok, "Problem with response from {}".format(url + download)
+        # Save to directory
         out_file = join(directory, download)
         with open(out_file, "wb") as f:
             f.write(res.content)
@@ -69,6 +69,7 @@ def getRoads(FIP, directory = None, year = "2019"):
         df = geopandas.read_file(join(directory, shp))
 
     else:
-        df = getArchive(res)
+        # Read url directly to geopandas
+        df = geopandas.read_file(url + download)
         
     return df
