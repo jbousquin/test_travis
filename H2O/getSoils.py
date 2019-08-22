@@ -17,7 +17,7 @@ def getPoly_surveys(poly, directory = None):
     url = "https://sdmdataaccess.nrcs.usda.gov/Spatial/SDMNAD83Geographic.wfs"
     # Check url status
     if requests.get(url).status_code != 200:
-        message("Error: No web feature service at {}".format(url))    
+        utils.message("Error: No web feature service at {}".format(url))    
 
     # Create params dict
     data = {"service": "WFS",
