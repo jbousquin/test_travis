@@ -39,7 +39,7 @@ def getNLCD(poly, directory = None, dataset = "Land_Cover", year = "2016"):
     url = "https://www.mrlc.gov/geoserver/mrlc_display/{}/ows".format(coverage)
     # Check url status
     if requests.get(url).status_code != 200:
-        message("Error: No web coverage service at {}".format(url))
+        utils.message("Error: No web coverage service at {}".format(url))
     
     # Create subset X and Y string from extent
     subset = ["X{},{}".format(bBox[0], bBox[2]),
