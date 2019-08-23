@@ -4,6 +4,11 @@ from os.path import join
 from H2O.utils import py as utils
 
 
+def strReq(url, data):
+    query = "&".join('{}={}'.format(k, v) for k, v in data.items())
+    return "{}?{}".format(url, query)
+
+
 def checkYear(year, years = None):
     """Run checks and formatting on year"""
     year = str(year) # coerce to string in case float() or int()
@@ -54,7 +59,7 @@ def getNLCD(poly, directory = None, dataset = "Land_Cover", year = "2016"):
             }
     # Get response
     res = requests.get(url, data)
-    assert res.ok, "Problem with response from {}".format(url)
+    assert res.ok, "Problem with response from: {}".format(strReq(url, data))
 
     # Write response to directory if provided
     if directory != None:    
