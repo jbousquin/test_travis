@@ -59,7 +59,7 @@ def getNLCD(poly, directory = None, dataset = "Land_Cover", year = "2016"):
             }
     # Get response
     res = requests.get(url, data)
-    assert res.ok, "Problem with response from: {}".format(strReq(url, data))
+    assert res.ok, "Problem with NLCD response: {}".format(strReq(url, data))
 
     # Write response to directory if provided
     if directory != None:    
