@@ -8,6 +8,11 @@ from json import loads
 from H2O.utils import py as utils
 
 
+def strReq(url, data):
+    """Use requests lib to print url server request"""
+    return requests.Request('GET', url, params=data).prepare().url
+
+
 def geoQuery(geo, inSR, fields, geoType = "esriGeometryEnvelope"):
     """ Return query as formatted dicitonary"""
     data = {"geometry": geo,
@@ -41,8 +46,7 @@ def mapServerRequest(catalog, service, layer, query, server = "arcgis",
         assert res.ok, "Problem with {} response".format(url)
         return loads(res.content.decode('utf-8'))
     except Exception:
-        utils.message("Could not get a response using: " +
-                "?{}".format(url, "&".join('{}={}'.format(k, v) for k, v in query.items())))
+        utils.message("Problem with map response: {}".format(strReq(url, data))
         raise
 
 
