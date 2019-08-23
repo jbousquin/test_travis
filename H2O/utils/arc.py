@@ -59,3 +59,30 @@ def transform_bBox(bBox, inEPSG, outEPSG):
     pnt2_out = transform_pnt(pnt2, inEPSG, outEPSG)
 
     return [pnt1_out[0], pnt1_out[1], pnt2_out[0], pnt2_out[1]]
+
+
+def message(msg, severity = 0):
+    print(msg)
+    if severity == 0: arcpy.AddMessage(msg)
+    elif severity == 1: arcpy.AddWarning(msg)
+    elif severity == 2: arcpy.AddError(msg)
+
+
+def unique_values(table, field):
+    """Unique Values
+    Purpose: returns a sorted list of unique values
+    Notes: used to find unique field values in table column
+    """
+    with arcpy.da.SearchCursor(table, [field]) as cursor:
+        return sorted({row[0] for row in cursor if row[0]})
+
+
+def append_shp(inShapefile, outShapefile):
+    """Append inShapefile to outShapefile"""
+    if os.path.isfile(outShapefile):
+        try:
+            arcpy.Append_management(inShapefile, outShapefile, "NO_TEST")
+        except Exception:
+            message("Could not perform append.")
+    else:
+        message("Specified file {} does not exist!".format(outShapefile))
