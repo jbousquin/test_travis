@@ -3,6 +3,11 @@ import requests
 from H2O.utils import py as utils
 
 
+def strReq(url, data):
+    """Use requests lib to print url server request"""
+    return requests.Request('GET', url, params=data).prepare().url
+
+
 def getPoly_surveys(poly, directory = None):
     """Query survey areassymbol (SSA) based on polygon bounding box
     """
@@ -29,7 +34,7 @@ def getPoly_surveys(poly, directory = None):
     
     # Get response
     res = requests.get(url, data)
-    assert res.ok, "Problem with soil survey response"
+    assert res.ok, "Problem with Soil response: {}".format(strReq(url, data))
 
     # Write response to directory if provided
     if directory != None:    
