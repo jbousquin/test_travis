@@ -61,3 +61,5 @@ def getNLCD(poly, directory = None, dataset = "Land_Cover", year = "2016"):
         out_file = join(directory, "NLCD_{}_{}.tif".format(year, dataset))
         with open(out_file, "wb") as f:
             f.write(res.content)
+    #else:
+        #return data
