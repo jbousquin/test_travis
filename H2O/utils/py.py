@@ -48,6 +48,21 @@ def message(string):
     print(string)
 
 
+def unique_values(df, field):
+    """Unique Values
+    Purpose: returns a list of unique field values from a dataframe column
+    """
+    return list(set(df[field]))
+
+
+def append_shp(inGeoDF, outGeoDF):
+    """Append inShapefile to outShapefile"""
+    from pandas import concat
+
+    inCRS = getCRS(inGeoDF)
+    assert getCRS(outGeoDF) == inCRS, "Projections don't match"
+    return geopandas.GeoDataFrame(concat([inGeoDF, outGeoDF], ignore_index=True), crs=inCRS)
+    
 #def clipRaster(raster, poly):
 #"""Clip raster down to polygon geometry
 #"""
