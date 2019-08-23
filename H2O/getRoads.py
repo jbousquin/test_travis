@@ -47,6 +47,9 @@ def getRoads(FIP, directory = None, year = "2019"):
 
     # Source url
     url = "https://www2.census.gov/geo/tiger/TIGER{}/ROADS/".format(year)
+    # Check url status
+    if requests.get(url).status_code != 200:
+        utils.message("Error: No web feature service at {}".format(url))
 
     # Create file name for county
     download = "tl_{}_{}_roads.zip".format(year, FIP)
