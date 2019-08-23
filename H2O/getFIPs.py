@@ -46,7 +46,7 @@ def mapServerRequest(catalog, service, layer, query, server = "arcgis",
         assert res.ok, "Problem with {} response".format(url)
         return loads(res.content.decode('utf-8'))
     except Exception:
-        utils.message("Problem with map response: {}".format(strReq(url, data))
+        utils.message("Problem with map response: {}".format(strReq(url, data)))
         raise
 
 
