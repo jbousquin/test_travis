@@ -5,8 +5,8 @@ from H2O.utils import py as utils
 
 
 def strReq(url, data):
-    query = "&".join('{}={}'.format(k, v) for k, v in data.items())
-    return "{}?{}".format(url, query)
+    """Use requests lib to print url server request"""
+    return requests.Request('GET', url, params=data).prepare().url
 
 
 def checkYear(year, years = None):
@@ -47,8 +47,8 @@ def getNLCD(poly, directory = None, dataset = "Land_Cover", year = "2016"):
         utils.message("Error: No web coverage service at {}".format(url))
     
     # Create subset X and Y string from extent
-    subset = ["X{},{}".format(bBox[0], bBox[2]),
-              "Y{},{}".format(bBox[1], bBox[3])]
+    subset = ['X("{}","{}")'.format(bBox[0], bBox[2]),
+              'Y("{}","{}")'.format(bBox[1], bBox[3])]
 
     # Create params dict
     data = {"service": "WCS",
