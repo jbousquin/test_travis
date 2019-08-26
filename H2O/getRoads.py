@@ -55,7 +55,7 @@ def getRoads(FIP, directory = None, year = "2019"):
     download = "tl_{}_{}_roads.zip".format(year, FIP)
 
     # Save zip to directory if specified
-    if directory != None:
+    if directory is not None:
         # Download zip file (stream = True may work better for larger files)
         res = requests.get(url + download)
         assert res.ok, "Problem with response from {}".format(url + download)

@@ -62,7 +62,7 @@ def getNLCD(poly, directory = None, dataset = "Land_Cover", year = "2016"):
     assert res.ok, "Problem with NLCD response: {}".format(strReq(url, data))
 
     # Write response to directory if provided
-    if directory != None:    
+    if directory is not None:    
         out_file = join(directory, "NLCD_{}_{}.tif".format(year, dataset))
         with open(out_file, "wb") as f:
             f.write(res.content)

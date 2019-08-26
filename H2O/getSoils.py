@@ -37,7 +37,7 @@ def getPoly_surveys(poly, directory = None):
     assert res.ok, "Problem with Soil response: {}".format(strReq(url, data))
 
     # Write response to directory if provided
-    if directory != None:    
+    if directory is not None:    
         out_file = os.path.join(directory, "SSA_soils.gml")
         with open(out_file, "wb") as f:
             f.write(res.content)
