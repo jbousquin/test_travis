@@ -55,13 +55,18 @@ def unique_values(df, field):
     return list(set(df[field]))
 
 
-def append_shp(inGeoDF, outGeoDF):
+def append_shp(geoDFs):
     """Append inShapefile to outShapefile"""
     from pandas import concat
 
-    inCRS = getCRS(inGeoDF)
-    assert getCRS(outGeoDF) == inCRS, "Projections don't match"
-    return geopandas.GeoDataFrame(concat([inGeoDF, outGeoDF], ignore_index=True), crs=inCRS)
+    assert(isinstance(geoDFs, list)), 'type list expected'
+    assert len(geoDFs) > 1, 'more than one geodataframe expected'
+    
+    inCRS = getCRS(geoDFs[0])
+    for df in geoDFs:
+        assert getCRS(df) == inCRS, "Projections don't match"
+    return geopandas.GeoDataFrame(concat(geoDFs,
+                                         ignore_index=True), crs=inCRS)
     
 #def clipRaster(raster, poly):
 #"""Clip raster down to polygon geometry
