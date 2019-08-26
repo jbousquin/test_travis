@@ -88,37 +88,34 @@ def querySSA(query):
     return loads(res.content)
 
 
+def getSurvey_date(SSA):
+    """Create SQL query for survey save date (saverest) using areasymbol (SSA)
+    """
+    where = "WHERE sacatalog.areasymbol = '{}'".format(SSA)
+    query = "SELECT saverest FROM sacatalog {}".format(where)
+    response = querySSA(query) # Query server
+    # Get date from response
+    if len(response)>0:
+        # Return date tuple in desired format (year, mo, da)
+        date = response['Table'][0][0].split(" ")[0].split("/")
+        return date[2], date[0].zfill(2), date[1].zfill(2)
+    else:
+        message("No survey for {}".format(SSA))
 
-##
-##
-##def getSurvey_date(SSA):
-##    """Create SQL query for survey save date (saverest) using areasymbol (SSA)
-##    """
-##    where = "WHERE sacatalog.areasymbol = '{}'".format(SSA)
-##    query = 'query: "SELECT saverest FROM sacatalog {}"'.format(where)
-##    res = querySSA(query)
-##    # Get date
-##    if len(res)>0:
-##        # Return date tuple in desired format (year, mo, da)
-##        date = res['Table'][0][0].split(" ")[0].split("/")
-##        return date[2], date[0].zfill(2), date[1].zfill(2)
-##    else:
-##        message("No {} for {}".format("survey", SSA))
-##
-##
-##def getMUKEY_val(mukey, col, table = "Component"):
-##    """SQl query a value from a column in a table based on a mukey"""
-##    where = "WHERE {}.mukey = '{}'".format(table, mukey)
-##    query = 'query: "SELECT {} FROM {} {}"'.format(col, table, where)
-##    res = querySSA(query)
-##    
-##    # Get value
-##    if len(res)>0:
-##        # Return list of values
-##        return [value[0] for value in res['Table']]
-##        #return list(set([value[0] for value in res['Table']])) #unique
-##    else:
-##        message("No {} for {}".format(col, mukey))
+
+def getMUKEY_val(mukey, col, table = "Component"):
+    """SQl query a value from a column in a table based on a mukey"""
+    where = "WHERE {}.mukey = '{}'".format(table, mukey)
+    query = 'query: "SELECT {} FROM {} {}"'.format(col, table, where)
+    res = querySSA(query)
+    
+    # Get value
+    if len(res)>0:
+        # Return list of values
+        return [value[0] for value in res['Table']]
+        #return list(set([value[0] for value in res['Table']])) #unique
+    else:
+        message("No {} for {}".format(col, mukey))
 
 
 def FIP_2_abbr(FIP):
