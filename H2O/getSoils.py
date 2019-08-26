@@ -44,6 +44,71 @@ def getPoly_surveys(poly, directory = None):
             f.write(res.content)
 
 
+def getSoil_FIP(FIP, directory = None):
+    "Download soils data by FIP"""
+    # Figure out survey file name
+    SSA_list = getCounty_surveys(FIP) # Get list of SSA for FIP
+    # List of dataframes for each SSA
+    dfs = [getDF_SSA(SSA, directory) for SSA in SSA_list]
+
+    # Concatenate dataframes if more than 1
+    if len(dfs) >1:    
+        df = utils.append_shp(dfs)
+
+    # Remove unwanted fields
+    delete_fields = ["AREASYMBOL", "SPATIALVER", "MUSYM"]
+    for field in fields:
+        df = df.drop[field]
+    
+    # Get "hydgrp" by mukey to populate "Max_Type_N" field
+    mukey_list = utils.unique_values(df, "MUKEY") # Unique mukey list
+
+    # Create dictionary where mukey:first hydrgrps
+    soil_dict = {key: getMUKEY_val(key, "hydgrp")[0] for key in mukey_list}
+    # Reduce dual soil hydrgrps to first, leaving None as None
+    soil_dict = {k:None if v == None else v[0] for (k,v) in  soil_dict.items()}
+
+    # Dictionary lookup for soil class -> Max_Type_N
+    max_n_lookup = {"A": 1, "B": 2, "C": 3, "D": 4, None: 0}
+
+    # Update Max_Type_N field using soil dictionary
+    # Add Max_Type_N field
+    df['Max_Type_N'] = df["MUKEY"].map(max_n_lookup)
+
+    # Drop NaN or 0 rows
+
+
+def getDF_SSA(SSA, directory = None):        
+     # Source url
+    url = "https://websoilsurvey.sc.egov.usda.gov/DSD/Download/Cache/SSA/"
+    # Check url status
+##    if requests.get(url).status_code != 200:
+##        utils.message("Error: No web feature service at {}".format(url))       
+    year, mo, da = getSurvey_date(SSA) # Get latest saverest
+    download = "wss_SSA_{}_[{}-{}-{}].zip".format(SSA, year, mo, da)
+
+    # Save zip to directory if specified
+    if directory is not None:
+        # Download SSA
+        res = requests.get(url + download)
+        assert res.ok, "Problem with response from {}".format(url + download)
+        out_file = join(directory, download) # Save to directory
+        with open(out_file, "wb") as f:
+            f.write(res.content)
+
+        # Check & unpack archive
+        assert checkArchive(out_file), "Bad zipfile"
+        with ZipFile(out_file) as archive:
+            archive.extractall(directory)
+        shp = download[:-3] + "shp"
+        df = geopandas.read_file(join(directory, shp))
+
+    else:
+        # Read url directly to geopandas
+        df = geopandas.read_file(url + download)
+    return df
+
+
 def getCounty_surveys(FIP):
     """Create SQL query for survey areasymbol (SSA) based on formated FIP"""
     # Survey area from FIP
