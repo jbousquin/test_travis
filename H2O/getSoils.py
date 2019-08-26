@@ -1,6 +1,7 @@
 import os
 import requests
 from H2O.utils import py as utils
+from json import loads
 
 
 def strReq(url, data):
@@ -43,30 +44,51 @@ def getPoly_surveys(poly, directory = None):
             f.write(res.content)
 
 
-##def querySSA(query):
-##    """Do SQL query"""
-##    #test SQL at https://sdmdataaccess.nrcs.usda.gov/Query.aspx
-##    dataQuery = '{}{}, {}{}'.format('{', query, 'format: "JSON"', '}')
-##    url = "https://sdmdataaccess.nrcs.usda.gov/Tabular/SDMTabularService/post.rest"
-##    # Make request & return response
-##    return json_load_str(api_request(url, dataQuery))
-##
-##
-##def getCounty_surveys(SSA):
-##    """Create SQL query for survey areasymbol (SSA) based on formated FIP"""
-##    tblA = "legend" # Legend table
-##    tblB = "laoverlap" # Legend Area Overlap Table
-##    aSymbol = "areasymbol" # Area symbol field name used in both tables
-##    cond1 = "{}.lkey = {}.lkey".format(tblA, tblB) # lkey = lkey
-##    cond2 = "{}.{} = '{}'".format(tblB, aSymbol, SSA) # areasymbol = SSA
-##    sJoin = "INNER JOIN {} ON {} AND {}".format(tblB, cond1, cond2)
-##    query = 'query: "SELECT {0}.{1} FROM {0} {2}"'.format(tblA, aSymbol, sJoin)
-##    response = querySSA(query) # Query server
-##    # Get list of SSA from response
-##    if len(response)>0:
-##        return [survey[0] for survey in response['Table']]
-##    else:
-##        message("No Soil Survey Area for {}".format(SSA))
+def getCounty_surveys(FIP):
+    """Create SQL query for survey areasymbol (SSA) based on formated FIP"""
+    # Survey area from FIP
+    SSA = "{}{}".format(FIP_2_abbr(FIP), FIP[2:5])
+    # SQL params
+    tblA = "legend" # Legend table
+    tblB = "laoverlap" # Legend Area Overlap Table
+    aSymbol = "areasymbol" # Area symbol field name used in both tables
+    cond1 = "{}.lkey = {}.lkey".format(tblA, tblB) # lkey = lkey
+    cond2 = "{}.{} = '{}'".format(tblB, aSymbol, SSA) # areasymbol = SSA
+    sJoin = "INNER JOIN {} ON {} AND {}".format(tblB, cond1, cond2)
+    query = "SELECT {0}.{1} FROM {0} {2}".format(tblA, aSymbol, sJoin)
+            
+    response = querySSA(query) # Query server
+    
+    # Get list of SSA from response
+    if len(response)>0:
+        return [survey[0] for survey in response['Table']]
+    else:
+        message("No Soil Survey Area for {}".format(SSA))
+
+
+def querySSA(query):
+    """Do SQL query on NRCS tabular service
+    Test SQL at https://sdmdataaccess.nrcs.usda.gov/Query.aspx"""
+    
+    # Source url
+    url = "https://sdmdataaccess.nrcs.usda.gov/Tabular/SDMTabularService/post.rest"
+    # Check url status
+##    if requests.get(url).status_code != 200:
+##        utils.message("Error: No web feature service at {}".format(url)) 
+
+    # Create params dict
+    data = {'query': query,
+            'format': "JSON"
+            }
+
+    # Get response
+    res = requests.post(url, data)
+    assert res.ok, "Problem with Soil response: {}".format(strReq(url, data))
+    
+    return loads(res.content)
+
+
+
 ##
 ##
 ##def getSurvey_date(SSA):
@@ -97,3 +119,68 @@ def getPoly_surveys(poly, directory = None):
 ##        #return list(set([value[0] for value in res['Table']])) #unique
 ##    else:
 ##        message("No {} for {}".format(col, mukey))
+
+
+def FIP_2_abbr(FIP):
+    return state_dict()[FIP[:2]][0]
+
+
+def state_dict():
+    """Construct distionary of states where:
+        key = FIP
+        value[0] = Abbreviation
+        value[1] = AWS state name
+    Notes: this is static so the end user can change scope more easily
+    """
+    states = {'01':['AL', 'Alabama'],
+              '53':['WA', 'Washington'],
+              '55':['WI', 'Wisconsin'],
+              '54':['WV', 'West_Virginia'],
+              '12':['FL', 'Florida'],
+              '56':['WY', 'Wyoming'],
+              '33':['NH', 'New_Hampshire'],
+              '34':['NJ', 'New_Jersey'],
+              '35':['NM', 'New_Mexico'],
+              '37':['NC', 'North_Carolina'],
+              '38':['ND', 'North_Dakota'],
+              '31':['NE', 'Nebraska'],
+              '36':['NY', 'New_York'],
+              '44':['RI', 'Rhode_Island'],
+              '32':['NV', 'Nevada'],
+              '08':['CO', 'Colorado'],
+              '06':['CA', 'California'],
+              '13':['GA', 'Georgia'],
+              '09':['CT', 'Connecticut'],
+              '40':['OK', 'Oklahoma'],
+              '39':['OH', 'Ohio'],
+              '20':['KS', 'Kansas'],
+              '45':['SC', 'South_Carolina'],
+              '21':['KY', 'Kentucky'],
+              '41':['OR', 'Oregon'],
+              '46':['SD', 'South_Dakota'],
+              '10':['DE', 'Delaware'],
+              '15':['HI', 'Hawaii'],
+              '48':['TX', 'Texas'],
+              '22':['LA', 'Louisiana'],
+              '47':['TN', 'Tennessee'],
+              '42':['PA', 'Pennsylvania'],
+              '51':['VA', 'Virginia'],
+              '02':['AK', 'Alaska'],
+              '05':['AR', 'Arkansas'],
+              '50':['VT', 'Vermont'],
+              '17':['IL', 'Illinois'],
+              '18':['IN', 'Indiana'],
+              '19':['IA', 'Iowa'],
+              '04':['AZ', 'Arizona'],
+              '16':['ID', 'Idaho'],
+              '23':['ME', 'Maine'],
+              '24':['MD', 'Maryland'],
+              '25':['MA', 'Massachusetts'],
+              '49':['UT', 'Utah'],
+              '29':['MO', 'Missouri'],
+              '27':['MN', 'Minnesota'],
+              '26':['MI', 'Michigan'],
+              '30':['MT', 'Montana'],
+              '28':['MS', 'Mississippi']
+              }
+    return states
