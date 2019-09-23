@@ -2,10 +2,13 @@
 """getFIPs function to return county FIPs for a given goepandas dataframe
 envelope. Can also easily be used to return county name.
 """
-import geopandas
 import requests
 from json import loads
-from H2O.utils import py as utils
+
+try:
+    from H2O.utils import py as utils
+except:
+    from H2O.utils import arc as utils
 
 
 def strReq(url, data):
