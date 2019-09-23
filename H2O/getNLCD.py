@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 import requests
 from os.path import join
-from H2O.utils import py as utils
+
+try:
+    from H2O.utils import py as utils
+except:
+    from H2O.utils import arc as utils
 
 
 def strReq(url, data):
