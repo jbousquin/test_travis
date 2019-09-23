@@ -2,7 +2,11 @@ import requests
 import geopandas
 from os.path import join
 from zipfile import ZipFile, is_zipfile
-from H2O.utils import py as utils
+
+try:
+    from H2O.utils import py as utils
+except:
+    from H2O.utils import arc as utils
 
 
 def checkYear(year, years = None):
