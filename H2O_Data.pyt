@@ -15,6 +15,14 @@ from H2O import getFIPs
 #from H2O import getRoads
 from H2O import get303d
 
+
+def message(msg, severity = 0):
+    print(msg)
+    if severity == 0: arcpy.AddMessage(msg)
+    elif severity == 1: arcpy.AddWarning(msg)
+    elif severity == 2: arcpy.AddError(msg)
+
+
 def main(poly, outDIR):
     # Check outDIR
     if os.path.exists(outDIR):
