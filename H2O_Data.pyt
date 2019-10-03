@@ -13,6 +13,7 @@ import arcpy
 from H2O import getNLCD
 from H2O import getFIPs
 #from H2O import getRoads
+from H2O import get303d
 
 def main(poly, outDIR):
     # Check outDIR
@@ -36,6 +37,13 @@ def main(poly, outDIR):
     #NHD(poly, outDIR)
     #for FIP in FIPS:
         #getRoads(FIP, outDIR)
+    # Create gdb
+    arcpy.CreateFileGDB_management(pathD2, "downloads.gdb")
+    # 303d impairments
+    shp_out = os.path.join(os.path.join(pathD2, "downloads.gdb"),
+                           "impaired303d")
+    inAOI = get303d.AOI(poly)
+    get303d.get303D_byPoly(inAOI, shp_out)
     
 
 
@@ -60,7 +68,7 @@ class H2O_Data(object):
         AOI.datatype = "DEFeatureClass"
         AOI.parameterType = "Required"
         AOI.direction = "Input"
-        
+
         output = arcpy.Parameter()
         output.displayName = "Output Folder"
         output.name = "outDIR"
