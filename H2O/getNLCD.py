@@ -28,7 +28,7 @@ def getNLCD(poly, directory = None, dataset = "Land_Cover", year = "2016"):
     Currently requires poly be in EPSG 3857
     """
     # Make sure dataset parameter is usable
-    datasets = ["Land_Cover", "Impervious", "Canopy_Cartographic"]
+    datasets = ["Land_Cover", "Impervious", "Tree_Canopy"]
     assert dataset in datasets, "The dataset input must match NLCD datasets"
     # Make sure year parameter is usable
     year = checkYear(year)
