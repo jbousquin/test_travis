@@ -18,7 +18,7 @@ def json2shp(ret, outFC):
 
 
 def shapeType(shp):
-    return shp.geom_type
+    return "esriGeometry{}".format(shp.geom_type)
 
 
 def getBoundingBox(shp):
