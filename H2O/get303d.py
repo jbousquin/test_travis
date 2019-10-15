@@ -2,6 +2,7 @@
 import requests
 import os
 from json import loads
+from H2O import geoQuery
 
 try:
     from H2O.utils import py as utils

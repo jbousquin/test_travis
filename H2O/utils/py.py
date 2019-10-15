@@ -1,6 +1,7 @@
 """This utils package contains functions written using python based packages"""
 import geopandas
 import pyproj
+import os
 
 
 def geoList(shp):

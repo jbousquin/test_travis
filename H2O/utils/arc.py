@@ -1,6 +1,6 @@
 """This utils package contains functions written using arcpy based packages"""
 import arcpy
-
+import os
 
 def geoList(shp):
     return [geo[0] for geo in arcpy.da.SearchCursor(shp, ['SHAPE@'])]

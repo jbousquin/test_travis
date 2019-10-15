@@ -37,7 +37,7 @@ class AOI:
         # List of geometry
         self.geometry = utils.geoList(shp)
         # Extent as string
-        self.envelope = ','.join(map(str, utils.getBoundingBox(poly)))
+        self.envelope = ','.join(map(str, utils.getBoundingBox(shp)))
         # SpatialReference Factory Code
         self.SR = utils.getCRS(shp)
 
