@@ -20,14 +20,14 @@ getNLCD.getNLCD(gpd_df)
 
 # Test multiple years/datasets
 years = ["2001", "2006", "2011", "2016",]
-datasets = ["Land_Cover", "Impervious", "Canopy_Cartographic",]
+datasets = ["Land_Cover", "Impervious", "Tree_Canopy",]
 for year in years:
     for dataset in datasets:
         #Canopy isn't available for every year
-        if dataset != "Canopy_Cartographic":
+        if dataset != "Tree_Canopy":
             getNLCD.getNLCD(gpd_df, filepath, dataset, year)
         else:
-            if year == "2011":
+            if year in ["2011", "2016"]:
                 getNLCD.getNLCD(gpd_df, filepath, dataset, year)
 
 
