@@ -4,6 +4,7 @@ envelope. Can also easily be used to return county name.
 """
 import requests
 from json import loads
+from H2O import geoQuery
 
 try:
     from H2O.utils import py as utils
@@ -14,18 +15,6 @@ except:
 def strReq(url, data):
     """Use requests lib to print url server request"""
     return requests.Request('GET', url, params=data).prepare().url
-
-
-def geoQuery(geo, inSR, fields, geoType = "esriGeometryEnvelope"):
-    """ Return query as formatted dicitonary"""
-    data = {"geometry": geo,
-            "geometryType": geoType,
-            "inSR": inSR,
-            "spatialRel": "esriSpatialRelIntersects",
-            "returnGeometry": "false",
-            "outFields": ','.join(fields),
-            }
-    return data
 
 
 def mapServerRequest(catalog, service, layer, query, server = "arcgis",
@@ -58,7 +47,7 @@ def polyFIPS(poly):
     envelope = ','.join(map(str, utils.getBoundingBox(poly))) # Get extent as str
     inSR = utils.getCRS(poly) # Get spatial reference
     fields = ["NAME", "GEOID"]
-    query = geoQuery(envelope, inSR, fields)
+    query = geoQuery.geoQuery(envelope, inSR, fields)
     catalog = "tigerweb.geo.census.gov"
     service = "TIGERweb/tigerWMS_Current"
     layer = 86 #Counties ID: 86

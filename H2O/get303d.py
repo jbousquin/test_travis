@@ -25,31 +25,6 @@ def testResultLength(serverQuery, payload):
     return 0
 
 
-def geoQuery(geo, inSR, fields, geoType = "esriGeometryEnvelope"):
-    """ Return query as formatted dicitonary"""
-    data = {"geometry": geo,
-            "geometryType": geoType,
-            "inSR": inSR,
-            "spatialRel": "esriSpatialRelIntersects",
-            "returnGeometry": "false",
-            "outFields": ','.join(fields),
-            "f": "json",
-            }
-    return data
-
-
-class AOI:
-    def __init__(self, shp):
-        self.path = os.path.dirname(shp)
-        self.name = os.path.basename(shp)
-        self.type = utils.shapeType(shp)
-        self.geometry = utils.geoList(shp)
-        self.SR = utils.getCRS(shp)
-
-    def __str__(self):
-        return "AOI object based on %s" % self.name
-
-
 def get303D_byPoly(inAOI, shp_out = None):
     """ Get impaired polygons/lines/points for inAOI geometries
     """
@@ -75,7 +50,7 @@ def get303D_byPoly(inAOI, shp_out = None):
         serverQuery = "{}/{}/query".format(url, layer.keys()[0])
 
         for inGeo in inAOI.geometry:
-            payload = geoQuery(inGeo.JSON, inAOI.SR, "*", inAOI.type)
+            payload = geoQuery.geoQuery(inGeo.JSON, inAOI.SR, "*", inAOI.type)
             payload['returnGeometry'] = returnGeo
             payload['returnTrueCurves'] = True
 
