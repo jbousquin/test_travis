@@ -3,6 +3,24 @@ import geopandas
 import pyproj
 
 
+def geoList(shp):
+    return shp.geometry
+
+
+def json2shp(ret, outFC):
+    """Write json response to .json test file and then read to DataFrame"""
+    jsonFile = os.path.join(os.path.dirname(outFC), "tempjsonOutput.json")
+    with open(jsonFile, "wb") as myJSON:
+        myJSON.write(ret)
+    gdf = geopandas.read_file(jsonFile, outFC)
+    os.remove(jsonFile)
+    return gdf
+
+
+def shapeType(shp):
+    return shp.geom_type
+
+
 def getBoundingBox(shp):
     """Use geopandas library instead of arcpy
     param@fc should be a shapefile
