@@ -1,41 +1,12 @@
 #!/usr/bin/env python
 import requests
 import os
-import arcpy
 from json import loads
 
 try:
     from H2O.utils import py as utils
 except:
     from H2O.utils import arc as utils
-
-def arc_geo(shp):
-    return [geo[0] for geo in arcpy.da.SearchCursor(shp, ['SHAPE@'])]
-
-
-def arc_shapeType(shp):
-    shapeType = arcpy.Describe(shp).shapeType
-    return "esriGeometry{}".format(shapeType)
-
-
-def arc_getCRS(fc):
-    """ Returns spatial reference factory code, GCS - WGS 1984 by default"""
-    desc = arcpy.Describe(fc)
-    code = desc.spatialReference.factoryCode
-    if code == 0: # if 0 -> 4326 Geographic Coordinate system "WGS 1984"
-        #project? going to be harder without CRS
-        code = 4326
-    return code
-
-
-def json2shp(ret, outFC):
-    """Write json text to .json file and then convert to shapefile"""
-    gdb = os.path.dirname(outFC)
-    jsonFile = os.path.join(os.path.dirname(gdb), "tempjsonOutput.json")
-    with open(jsonFile, "wb") as myJSON:
-        myJSON.write(ret)
-    arcpy.JSONToFeatures_conversion(jsonFile, outFC)
-    os.remove(jsonFile)
 
 
 def mapServerRequest(serverQuery, payload):
@@ -71,9 +42,9 @@ class AOI:
     def __init__(self, shp):
         self.path = os.path.dirname(shp)
         self.name = os.path.basename(shp)
-        self.type = arc_shapeType(shp)
-        self.geometry = arc_geo(shp)
-        self.SR = arc_getCRS(shp)
+        self.type = utils.shapeType(shp)
+        self.geometry = utils.geoList(shp)
+        self.SR = utils.getCRS(shp)
 
     def __str__(self):
         return "AOI object based on %s" % self.name
@@ -115,7 +86,7 @@ def get303D_byPoly(inAOI, shp_out = None):
                     #split query if necessary
                     #write result
                     ret = mapServerRequest(serverQuery, payload)
-                    json2shp(ret, shp_out + '_' + layer.values()[0])
+                    utils.json2shp(ret, shp_out + '_' + layer.values()[0])
                 else:
                     res = loads(mapServerRequest(serverQuery, payload))
 
