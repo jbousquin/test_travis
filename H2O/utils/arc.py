@@ -2,6 +2,25 @@
 import arcpy
 
 
+def geoList(shp):
+    return [geo[0] for geo in arcpy.da.SearchCursor(shp, ['SHAPE@'])]
+
+
+def json2shp(ret, outFC):
+    """Write json text to .json file and then convert to shapefile"""
+    gdb = os.path.dirname(outFC)
+    jsonFile = os.path.join(os.path.dirname(gdb), "tempjsonOutput.json")
+    with open(jsonFile, "wb") as myJSON:
+        myJSON.write(ret)
+    arcpy.JSONToFeatures_conversion(jsonFile, outFC)
+    os.remove(jsonFile)
+
+
+def shapeType(shp):
+    shapeType = arcpy.Describe(shp).shapeType
+    return "esriGeometry{}".format(shapeType)
+
+
 def getBoundingBox(fc):
     """Returns dataset extent envelope"""
     desc = arcpy.Describe(fc)
