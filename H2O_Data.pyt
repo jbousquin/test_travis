@@ -13,7 +13,9 @@ import arcpy
 from H2O import getNLCD
 from H2O import getFIPs
 #from H2O import getRoads
+from H2O import getNHDPlus
 from H2O import get303d
+from H2O import geoQuery
 
 
 def message(msg, severity = 0):
@@ -45,13 +47,19 @@ def main(poly, outDIR):
     #NHD(poly, outDIR)
     #for FIP in FIPS:
         #getRoads(FIP, outDIR)
+    # Geometry to use in geo queries
+    inAOI = geoQuery.AOI(poly)
     # Create gdb
     arcpy.CreateFileGDB_management(pathD2, "downloads.gdb")
     # 303d impairments
     shp_out = os.path.join(os.path.join(pathD2, "downloads.gdb"),
                            "impaired303d")
-    inAOI = get303d.AOI(poly)
     get303d.get303D_byPoly(inAOI, shp_out)
+
+    # NHDPlus Catchments
+    shp_out = os.path.join(os.path.join(pathD2, "downloads.gdb"),
+                           "catchments")
+    getNHDPLus.getcatchments_MS_08(inAOI, shp_out)
     
 
 
