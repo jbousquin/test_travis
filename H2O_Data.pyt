@@ -40,7 +40,7 @@ def main(poly, outDIR):
     FIPS = getFIPs.polyFIPS(poly)
     #nlcd(FIPS, outDIR) #landuse and canopy
     getNLCD.getNLCD(poly, pathD2, dataset = "Land_Cover") # landuse
-    getNLCD.getNLCD(poly, pathD2, dataset = "Canopy_Cartographic", year = 2011)
+    getNLCD.getNLCD(poly, pathD2, dataset = "Tree_Canopy")
     #soils(FIPS, outDIR)
     #NHD(poly, outDIR)
     #for FIP in FIPS:
