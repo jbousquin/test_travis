@@ -51,7 +51,7 @@ def get303D_byPoly(inAOI, shp_out = None):
         serverQuery = "{}/{}/query".format(url, layer.keys()[0])
 
         for inGeo in inAOI.geometry:
-            payload = geoQuery.geoQuery(inGeo.JSON, inAOI.SR, "*", inAOI.type)
+            payload = geoQuery.geoQuery(inGeo, inAOI.SR, "*", inAOI.type)
             payload['returnGeometry'] = returnGeo
             payload['returnTrueCurves'] = True
 
