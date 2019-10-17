@@ -5,7 +5,9 @@ import os
 
 
 def geoList(shp):
-    return shp.geometry
+    if not isinstance(shp, geopandas.geodataframe.GeoDataFrame):
+        shp = geopandas.read_file(shp)
+    return shp.geometry.to_json()
 
 
 def json2shp(ret, outFC):
@@ -19,14 +21,17 @@ def json2shp(ret, outFC):
 
 
 def shapeType(shp):
-    return "esriGeometry{}".format(shp.geom_type)
+    if not isinstance(shp, geopandas.geodataframe.GeoDataFrame):
+        shp = geopandas.read_file(shp)
+    return "esriGeometry{}".format(shp.geom_type[0])
 
 
 def getBoundingBox(shp):
     """Use geopandas library instead of arcpy
     param@fc should be a shapefile
     """
-    #shp = geopandas.read_file(fc)
+    if not isinstance(shp, geopandas.geodataframe.GeoDataFrame):
+        shp = geopandas.read_file(shp)
     xmin = shp.bounds['minx'][0]
     xmax = shp.bounds['maxx'][0]
     ymin = shp.bounds['miny'][0]
@@ -37,7 +42,8 @@ def getBoundingBox(shp):
 
 def getCRS(shp):
     """Return EPSG for shapefile"""
-    #shp = geopandas.read_file(fc)
+    if not isinstance(shp, geopandas.geodataframe.GeoDataFrame):
+        shp = geopandas.read_file(shp)
     return shp.crs['init'][5:]
 
 
