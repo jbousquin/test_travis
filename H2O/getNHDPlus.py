@@ -20,9 +20,10 @@ def testResultLength(serverQuery, payload):
     payload['returnIdsOnly'] = True
     ret = mapServerRequest(serverQuery, payload)
     res = loads(ret)
-    if(res['objectIds']):
+    try:
         return len(res['objectIds'])
-    return 0
+    except:
+        return res['error']
 ##def arc_getSR(fc):
 ##    """ Returns spatial reference factory code, GCS - WGS 1984 by default"""
 ##    desc = arcpy.Describe(fc)
@@ -119,7 +120,7 @@ def getCatchments_MS_08(inAOI, shp_out = None):
     serverQuery = "{}/{}/query".format(url, service['layer'][0].keys()[0])
 
     for inGeo in inAOI.geometry:
-            payload = geoQuery.geoQuery(inGeo.JSON, inAOI.SR, "*", inAOI.type)
+            payload = geoQuery.geoQuery(inGeo, inAOI.SR, "*", inAOI.type)
             payload['returnGeometry'] = returnGeo
             payload['returnTrueCurves'] = True
 
@@ -140,4 +141,54 @@ def getCatchments_MS_08(inAOI, shp_out = None):
                     except:
                         return res
             else:
-                print("No features in {} layer").format(layer.values()[0])
+                print("No features in {} layer").format(service['layer'].values()[0])
+
+
+def getCatchments(inAOI, shp_out = None):
+    #https://enviroatlas.epa.gov/arcgis/rest/services/Supplemental/NHDPlusV21_EA/MapServer
+    # Service details (should be object)
+    service = {'server_url':"enviroatlas.epa.gov/arcgis/rest/services",
+               'mapServer':"Supplemental/NHDPlusV21_EA/MapServer",
+               'layer': {0:"NHDFlowline Main path - Stream Order 4 and higher",
+                         1:"NHDFlowline Main path - Stream Order 2 and 3",
+                         2:"NHDFlowline - Stream Order 1",
+                         3:"NHDArea",
+                         4:"NHDWaterbody",
+                         },
+               }
+    url = "https://{}/{}".format(service['server_url'], service['mapServer'])
+
+    # Query
+    if shp_out is None:
+        returnGeo = False
+    else:
+        returnGeo = True
+
+    # In the future the layer list should include all RPUs ane be subset within
+    #this function based on an extent query on RPU boundary service.
+    lyr = list(service['layer'].keys())[list(service['layer'].values()).index('NHDArea')]
+    serverQuery = "{}/{}/query".format(url, lyr)
+
+    for inGeo in inAOI.geometry:
+            payload = geoQuery.geoQuery(inGeo, inAOI.SR, "*", inAOI.type)
+            payload['returnGeometry'] = returnGeo
+            payload['returnTrueCurves'] = True
+
+            #get length of response first
+            if testResultLength(serverQuery, payload)>0:
+                payload['returnIdsOnly'] = False
+                if returnGeo is True:
+                    #split query if necessary
+                    #write result
+                    ret = mapServerRequest(serverQuery, payload)
+                    utils.json2shp(ret, shp_out + '_res')
+                else:
+                    res = loads(mapServerRequest(serverQuery, payload))
+
+                    try:
+                        if len(res['features'])>0:
+                            return res['features'][0]['attributes']
+                    except:
+                        return res
+            else:
+                print("No features in {} layer").format(service['layer'][lyr])
