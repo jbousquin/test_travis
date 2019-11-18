@@ -59,7 +59,7 @@ def main(poly, outDIR):
     # NHDPlus Catchments
     shp_out = os.path.join(os.path.join(pathD2, "downloads.gdb"),
                            "catchments")
-    getNHDPlus.getCatchments(inAOI, shp_out)
+    #getNHDPlus.getCatchments(inAOI, shp_out)
     
 
 
