@@ -60,7 +60,7 @@ def main(poly, outDIR):
     #shp_out = os.path.join(os.path.join(pathD2, "downloads.gdb"),
     #                      "catchments")
     #getNHDPlus.getCatchments(inAOI, shp_out)
-    getCatchments_USGS(inAOI, outDIR, layer='catchmentsp')
+    getNHDPlus.getCatchments_USGS(inAOI, outDIR, layer='catchmentsp')
 
 
 class Toolbox(object):
