@@ -74,7 +74,7 @@ def getRoads(FIP, directory = None, year = "2019"):
         with ZipFile(out_file) as archive:
             archive.extractall(directory)
         shp = download[:-3] + "shp"
-        #df = geopandas.read_file(join(directory, shp))
+        df = geopandas.read_file(join(directory, shp))
 
     else:
         # Read url directly to geopandas
