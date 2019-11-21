@@ -2,11 +2,18 @@ import requests
 import os
 from json import loads
 from H2O import geoQuery
+from zipfile import ZipFile, is_zipfile
+
 
 try:
     from H2O.utils import py as utils
 except:
     from H2O.utils import arc as utils
+
+
+def checkArchive(archive):
+    """Quickly return True if valid zip file"""
+    return is_zipfile(archive)
 
 
 def mapServerRequest(serverQuery, payload):
@@ -192,3 +199,61 @@ def getCatchments(inAOI, shp_out = None):
                         return res
             else:
                 print("No features in {} layer").format(service['layer'][lyr])
+
+
+def geoquery_WFS(params_dict):
+    """Create standard bbox query for get/post"""
+    temp = {"service": "WFS",
+            "request": "GetFeature",
+            }
+    return temp.update(params_dict)
+    
+
+def getCatchments_USGS(inAOI, directory=None, layer='catchmentsp'):
+    """Download geometries from USGS server"""
+      
+    # Assign and check Server
+    url = "https://cida.usgs.gov/nwc/geoserver/nhdplus/ows"
+    if requests.get(url).status_code != 200:
+        print("warning!")
+
+    # Build query from AOI poly
+    bBox_in = getBoundingBox(poly)
+    crs_in = getCRS(poly)
+    bBox = transform_bBox(bBox_in, crs_in, nhdPlusCRS()[layer])
+
+    data = {"typeName": layer,
+            "maxFeatures": 1000,
+            "bbox": str(bBox).strip('[]'),
+            "outputFormat": "SHAPE-ZIP"
+            }
+    data = geoquery_WFS(data)
+    
+    # name poly download by layer
+    download = "NHDPlus_{}_.zip".format(layer)
+
+    # Save zip to directory if specified
+    if directory is not None:
+        # Download zip file (stream = True may work better for larger files)
+        res = requests.get(url + download)
+        assert res.ok, "Problem with response from {}".format(url + download)
+        # Save to directory
+        out_file = join(directory, download)
+        with open(out_file, "wb") as f:
+            f.write(res.content)
+            utils.message("Download Succeeded: {}".format(download))
+
+        # Check & unpack archive
+        assert checkArchive(out_file), "Bad zipfile"
+        with ZipFile(out_file) as archive:
+            archive.extractall(directory)
+        shp = download[:-3] + "shp"
+        #df = geopandas.read_file(join(directory, shp))
+
+    else:
+        # Read url directly to geopandas
+        df = geopandas.read_file(url + download)
+        
+    return df
+
+    
