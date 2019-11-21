@@ -218,9 +218,9 @@ def getCatchments_USGS(inAOI, directory=None, layer='catchmentsp'):
         print("warning!")
 
     # Build query from AOI poly
-    bBox_in = getBoundingBox(poly)
-    crs_in = getCRS(poly)
-    bBox = transform_bBox(bBox_in, crs_in, nhdPlusCRS()[layer])
+    bBox_in = utils.getBoundingBox(poly)
+    crs_in = utils.getCRS(poly)
+    bBox = utils.transform_bBox(bBox_in, crs_in, nhdPlusCRS()[layer])
 
     data = {"typeName": layer,
             "maxFeatures": 1000,
