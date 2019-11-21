@@ -67,13 +67,14 @@ def getRoads(FIP, directory = None, year = "2019"):
         out_file = join(directory, download)
         with open(out_file, "wb") as f:
             f.write(res.content)
+            utils.message("Download Succeeded: {}".format(download))
 
         # Check & unpack archive
         assert checkArchive(out_file), "Bad zipfile"
         with ZipFile(out_file) as archive:
             archive.extractall(directory)
         shp = download[:-3] + "shp"
-        df = geopandas.read_file(join(directory, shp))
+        #df = geopandas.read_file(join(directory, shp))
 
     else:
         # Read url directly to geopandas

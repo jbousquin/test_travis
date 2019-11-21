@@ -57,10 +57,10 @@ def main(poly, outDIR):
     get303d.get303D_byPoly(inAOI, shp_out)
 
     # NHDPlus Catchments
-    shp_out = os.path.join(os.path.join(pathD2, "downloads.gdb"),
-                           "catchments")
+    #shp_out = os.path.join(os.path.join(pathD2, "downloads.gdb"),
+    #                      "catchments")
     #getNHDPlus.getCatchments(inAOI, shp_out)
-    
+    getCatchments_USGS(inAOI, outDIR, layer='catchmentsp')
 
 
 class Toolbox(object):
