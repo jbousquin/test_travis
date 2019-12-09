@@ -256,4 +256,11 @@ def getCatchments_USGS(inAOI, directory=None, layer='catchmentsp'):
         
     return df
 
-    
+
+def nhdPlusCRS():
+    """typeName : crs_out"""
+    return {'catchmentsp': 3857,
+            'nhdwaterbody': 4269,
+            'nhdarea': 4269,
+            'nhdflowline_network': 4269,
+            }
