@@ -4,6 +4,7 @@ import geopandas
 from H2O import getNLCD
 from H2O import getFIPs
 from H2O import getRoads
+from H2O import getNHDPlus
 
 # Purpose: Test script to get NLCD rasters for bounding box
 
@@ -36,3 +37,6 @@ list_FIPs = getFIPs.polyFIPS(gpd_df)
 
 for FIP in list_FIPs:
     getRoads.getRoads(FIP, directory = filepath)
+
+# Test get catchments from USGS  
+getNHDPlus.getCatchments_USGS(gpd_df, directory=filepath)
