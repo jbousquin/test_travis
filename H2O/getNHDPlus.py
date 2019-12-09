@@ -222,15 +222,17 @@ def getCatchments_USGS(inAOI, directory=None, layer='catchmentsp'):
     crs_in = utils.getCRS(inAOI)
     bBox = utils.transform_bBox(bBox_in, crs_in, nhdPlusCRS()[layer])
 
-    data = {"typeName": layer,
+    data = {"service": "WFS",
+            "request": "GetFeature",
+            "typeName": layer,
             "maxFeatures": 1000,
             "bbox": str(bBox).strip('[]'),
             "outputFormat": "SHAPE-ZIP"
             }
-    data = geoquery_WFS(data)
+    #data = geoquery_WFS(data)
     
     # name poly download by layer
-    download = "NHDPlus_{}_.zip".format(layer)
+    download = "NHDPlus_{}.zip".format(layer)
 
     # Save zip to directory if specified
     if directory is not None:
