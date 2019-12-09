@@ -238,7 +238,7 @@ def getCatchments_USGS(inAOI, directory=None, layer='catchmentsp'):
         res = requests.get(url, data)
         assert res.ok, "Problem with response from {}".format(url)
         # Save to directory
-        out_file = join(directory, download)
+        out_file = os.path.join(directory, download)
         with open(out_file, "wb") as f:
             f.write(res.content)
             utils.message("Download Succeeded: {}".format(download))
