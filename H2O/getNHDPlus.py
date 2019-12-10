@@ -238,7 +238,7 @@ def getCatchments_USGS(inAOI, directory=None, layer='catchmentsp'):
     if directory is not None:
         # Download zip file (stream = True may work better for larger files)
         res = requests.get(url, data)
-        assert res.ok, "Problem with response from {}".format(url)
+        assert res.ok, "Problem with response from {}".format(strReq(url, data))
         # Save to directory
         out_file = os.path.join(directory, download)
         with open(out_file, "wb") as f:
@@ -246,7 +246,7 @@ def getCatchments_USGS(inAOI, directory=None, layer='catchmentsp'):
             utils.message("Download Succeeded: {}".format(download))
 
         # Check & unpack archive
-        #assert checkArchive(out_file), "Bad zipfile"
+        assert checkArchive(out_file), "Check response from {}".format(strReq(url, data))
         with ZipFile(out_file) as archive:
             archive.extractall(directory)
         shp = download[:-3] + "shp"
@@ -266,3 +266,8 @@ def nhdPlusCRS():
             'nhdarea': 4269,
             'nhdflowline_network': 4269,
             }
+
+
+def strReq(url, data):
+    """Use requests lib to print url server request"""
+    return requests.Request('GET', url, params=data).prepare().url
