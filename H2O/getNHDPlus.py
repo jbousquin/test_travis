@@ -1,4 +1,5 @@
 import requests
+import geopandas
 import os
 from json import loads
 from H2O import geoQuery
@@ -246,7 +247,7 @@ def getCatchments_USGS(inAOI, directory=None, layer='catchmentsp'):
             utils.message("Download Succeeded: {}".format(download))
 
         # Check & unpack archive
-        assert checkArchive(out_file), "Check response from {}".format(strReq(url, data))
+        assert checkArchive(out_file), "Bad zipfile"
         with ZipFile(out_file) as archive:
             archive.extractall(directory)
         shp = download[:-3] + "shp"
