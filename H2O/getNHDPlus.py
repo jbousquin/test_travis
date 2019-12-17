@@ -224,9 +224,11 @@ def getCatchments_USGS(inAOI, directory=None, layer='catchmentsp'):
     bBox = utils.transform_bBox(bBox_in, crs_in, nhdPlusCRS()[layer])
 
     data = {"service": "WFS",
+            "version": "1.0.0",
             "request": "GetFeature",
             "typeName": layer,
             "maxFeatures": 1000,
+            "EPSG": nhdPlusCRS()[layer]
             "bbox": str(bBox).strip('[]'),
             "outputFormat": "SHAPE-ZIP"
             }
@@ -262,7 +264,7 @@ def getCatchments_USGS(inAOI, directory=None, layer='catchmentsp'):
 
 def nhdPlusCRS():
     """typeName : crs_out"""
-    return {'catchmentsp': 3857,
+    return {'catchmentsp': 4269,
             'nhdwaterbody': 4269,
             'nhdarea': 4269,
             'nhdflowline_network': 4269,
