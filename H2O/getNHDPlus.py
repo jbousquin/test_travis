@@ -253,13 +253,13 @@ def getCatchments_USGS(inAOI, directory=None, layer='catchmentsp'):
         with ZipFile(out_file) as archive:
             archive.extractall(directory)
         shp = download[:-3] + "shp"
-        df = geopandas.read_file(join(directory, shp))
+        #df = geopandas.read_file(os.path.join(directory, shp))
 
     else:
         # Read url directly to geopandas
         df = geopandas.read_file(url + download)
         
-    return df
+    return shp
 
 
 def nhdPlusCRS():
