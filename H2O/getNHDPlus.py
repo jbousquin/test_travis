@@ -228,9 +228,9 @@ def getCatchments_USGS(inAOI, directory=None, layer='catchmentsp'):
             "request": "GetFeature",
             "typeName": layer,
             "maxFeatures": 1000,
-            "EPSG": nhdPlusCRS()[layer]
+            "EPSG": nhdPlusCRS()[layer],
             "bbox": str(bBox).strip('[]'),
-            "outputFormat": "SHAPE-ZIP"
+            "outputFormat": "SHAPE-ZIP",
             }
     #data = geoquery_WFS(data)
     
