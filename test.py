@@ -5,6 +5,7 @@ from H2O import getNLCD
 from H2O import getFIPs
 from H2O import getRoads
 from H2O import getNHDPlus
+from H2O import getWQP
 from future.utils import listvalues
 
 # Purpose: Test script to get NLCD rasters for bounding box
