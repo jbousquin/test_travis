@@ -5,6 +5,7 @@ from H2O import getNLCD
 from H2O import getFIPs
 from H2O import getRoads
 from H2O import getNHDPlus
+from future.utils import listvalues
 
 # Purpose: Test script to get NLCD rasters for bounding box
 
@@ -40,3 +41,45 @@ for FIP in list_FIPs:
 
 # Test get catchments from USGS  
 getNHDPlus.getCatchments_USGS(gpd_df, directory=filepath)
+
+# Test getWQ
+data = {'characteristicName': ['Salinity',
+                               'Chlorophyll a, uncorrected for pheophytin',
+                               'Ammonia-nitrogen', 'Organic Nitrogen',
+                               'Dissolved oxygen saturation',
+                               'Dissolved oxygen (DO)',
+                               'Dissolved Oxygen',
+                               'Oxygen',
+                               'Dissolved oxygen'
+                               ]
+        }
+#wqList =['Salinity', 'Chlorophyll-All', 'Nitrogen-All','Dissolved Oxygen-All']
+## Format data dictionary based on wqList
+#for wq in wqList:
+#    cKey = 'characteristicName'
+#    # Check if data dictionary exists yet
+#    if cKey in data.keys():
+#        # Characteristics to add
+#        newChar = listvalues(getWQP.characteristicName(wq))[0]
+#        data[cKey] = data[cKey] + newChar
+#    else:
+#        data = getWQP.characteristicName(wq)
+
+# Test get by FIPS
+list_FIPs = getFIPs.polyFIPS(gpd_df)
+
+for FIP in list_FIPs:
+    # Get station data
+    getWQP.byFIP(FIP, data, filepath)
+
+
+# Test get by bbox
+bBox = utils.getBoundingBox(gpd_df)
+
+# Get station data
+getWQP.byBBox(bBox, data, filepath)
+
+# Get data from narrowResult
+data['dataTable'] = 'Result'
+data['dataProfile'] = 'narrowResult'
+getWQP.byBBox(bBox, data, filepath)
